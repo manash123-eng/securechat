@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureChat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>"/>
+</head>
+<body>
+
+<!-- ═══ AUTH SCREEN ═══════════════════════════════════════════ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-logo-area">
+      <div class="auth-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h1>SecureChat</h1>
+      <p>End-to-end encrypted messaging</p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="register">Sign Up</button>
+      </div>
+      <!-- Login -->
+      <form id="login-form" class="auth-form active" autocomplete="on">
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-envelope"></i></div>
+          <input type="email" id="login-email" placeholder="Email address" required autocomplete="email"/>
+        </div>
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-lock"></i></div>
+          <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password"/>
+          <button type="button" class="eye-btn" tabindex="-1"><i class="fa-solid fa-eye-slash"></i></button>
+        </div>
+        <div class="auth-error hidden" id="login-error"></div>
+        <button type="submit" class="auth-submit" id="login-btn">
+          <span>Sign In</span><i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+      <!-- Register -->
+      <form id="register-form" class="auth-form" autocomplete="on">
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-at"></i></div>
+          <input type="text" id="reg-username" placeholder="Username (letters, numbers, _)" required autocomplete="username"/>
+        </div>
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-user"></i></div>
+          <input type="text" id="reg-displayname" placeholder="Display name" autocomplete="name"/>
+        </div>
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-envelope"></i></div>
+          <input type="email" id="reg-email" placeholder="Email address" required autocomplete="email"/>
+        </div>
+        <div class="field-group">
+          <div class="field-icon"><i class="fa-solid fa-lock"></i></div>
+          <input type="password" id="reg-password" placeholder="Password (min 8 chars, A-z-0-9)" required autocomplete="new-password"/>
+          <button type="button" class="eye-btn" tabindex="-1"><i class="fa-solid fa-eye-slash"></i></button>
+        </div>
+        <div class="auth-error hidden" id="register-error"></div>
+        <button type="submit" class="auth-submit" id="register-btn">
+          <span>Create Account</span><i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+    <div class="auth-badge"><i class="fa-solid fa-lock"></i> AES-256 Encrypted · No ads · No tracking</div>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ══════════════════════════════════════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-me" id="sidebar-user-btn">
+        <div class="av-wrap" id="my-av-wrap"></div>
+        <div class="sidebar-me-info">
+          <span class="sidebar-me-name" id="my-displayname">Loading…</span>
+          <span class="sidebar-me-status">● Online</span>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="ic" id="new-chat-btn" title="New Chat"><i class="fa-solid fa-pen-to-square"></i></button>
+        <button class="ic" id="new-group-btn" title="New Group"><i class="fa-solid fa-users"></i></button>
+        <button class="ic" id="theme-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+        <button class="ic" id="logout-btn" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="chat-search" placeholder="Search chats or find people…"/>
+        <button class="search-clear hidden" id="search-clear"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="chat-list-wrap">
+      <div id="chat-list"></div>
+      <div id="search-panel" class="hidden"></div>
+      <div id="empty-state" class="empty-state hidden">
+        <i class="fa-regular fa-comments"></i>
+        <p>No chats yet</p>
+        <span>Search for someone to start a conversation</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN PANEL -->
+  <main class="main-panel">
+    <!-- Welcome -->
+    <div class="welcome" id="welcome">
+      <div class="welcome-inner">
+        <div class="welcome-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h2>SecureChat</h2>
+        <p>Select a conversation or search for someone new</p>
+        <div class="welcome-pills">
+          <span><i class="fa-solid fa-lock"></i> End-to-end encrypted</span>
+          <span><i class="fa-solid fa-bolt"></i> Real-time</span>
+          <span><i class="fa-solid fa-eye-slash"></i> Private</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Chat -->
+    <div class="chat-view hidden" id="chat-view">
+      <!-- Header -->
+      <div class="chat-head">
+        <button class="ic back-btn" id="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="chat-head-info" id="chat-head-info">
+          <div class="av-wrap sm" id="chat-av-wrap"></div>
+          <div>
+            <div class="chat-head-name" id="chat-head-name">—</div>
+            <div class="chat-head-sub" id="chat-head-sub">—</div>
+          </div>
+        </div>
+        <div class="chat-head-actions">
+          <button class="ic" id="msg-search-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <button class="ic" id="chat-menu-btn" title="Menu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        </div>
+      </div>
+
+      <!-- Msg search bar -->
+      <div class="msg-search-bar hidden" id="msg-search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="msg-search-input" placeholder="Search in conversation…"/>
+        <button class="ic" id="close-msg-search"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Messages -->
+      <div class="msgs-area" id="msgs-area">
+        <div class="msgs-list" id="msgs-list"></div>
+        <div class="typing-wrap hidden" id="typing-wrap">
+          <div class="typing-bubble"><span></span><span></span><span></span></div>
+          <span id="typing-who"></span>
+        </div>
+      </div>
+
+      <!-- Reply preview -->
+      <div class="reply-bar hidden" id="reply-bar">
+        <div class="reply-bar-line"></div>
+        <div class="reply-bar-body">
+          <div class="reply-bar-name" id="reply-bar-name"></div>
+          <div class="reply-bar-text" id="reply-bar-text"></div>
+        </div>
+        <button class="ic" id="cancel-reply"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Media preview -->
+      <div class="media-bar hidden" id="media-bar">
+        <div class="media-bar-preview" id="media-bar-preview"></div>
+        <button class="ic" id="cancel-media"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Input -->
+      <div class="input-area">
+        <button class="ic" id="emoji-btn"><i class="fa-regular fa-face-smile"></i></button>
+        <label class="ic" title="Attach">
+          <i class="fa-solid fa-paperclip"></i>
+          <input type="file" id="file-input" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip" hidden/>
+        </label>
+        <div class="input-box">
+          <textarea id="msg-input" placeholder="Type a message…" rows="1" maxlength="5000"></textarea>
+        </div>
+        <button class="ic rec-btn" id="rec-btn" title="Voice message"><i class="fa-solid fa-microphone"></i></button>
+        <button class="ic send-btn" id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══ MODALS ════════════════════════════════════════════════ -->
+<!-- New Chat -->
+<div class="modal hidden" id="modal-new-chat">
+  <div class="modal-bg" data-close="modal-new-chat"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>New Conversation</h3><button class="ic" data-close="modal-new-chat"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="nc-search" placeholder="Search by name or username…"/></div>
+      <div id="nc-results" class="user-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- New Group -->
+<div class="modal hidden" id="modal-new-group">
+  <div class="modal-bg" data-close="modal-new-group"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>New Group</h3><button class="ic" data-close="modal-new-group"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <input type="text" class="plain-input" id="grp-name" placeholder="Group name…" maxlength="50"/>
+      <div class="search-box" style="margin-top:12px"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="grp-search" placeholder="Add participants…"/></div>
+      <div id="grp-results" class="user-list"></div>
+      <div id="grp-chips" class="chips"></div>
+      <button class="full-btn" id="create-grp-btn"><i class="fa-solid fa-users"></i> Create Group</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile -->
+<div class="modal hidden" id="modal-profile">
+  <div class="modal-bg" data-close="modal-profile"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>My Profile</h3><button class="ic" data-close="modal-profile"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="profile-av-wrap">
+        <div class="profile-av" id="profile-av"></div>
+        <label class="profile-av-edit"><i class="fa-solid fa-camera"></i><input type="file" id="av-upload" accept="image/*" hidden/></label>
+      </div>
+      <div class="field-group-plain">
+        <label>Display Name</label>
+        <input type="text" id="prof-name" maxlength="50"/>
+      </div>
+      <div class="field-group-plain">
+        <label>Status</label>
+        <input type="text" id="prof-status" maxlength="100"/>
+      </div>
+      <button class="full-btn" id="save-profile-btn"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox hidden" id="lightbox">
+  <div class="lightbox-bg" id="lightbox-bg"></div>
+  <div class="lightbox-content" id="lightbox-content"></div>
+  <button class="lightbox-close" id="lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+<!-- Context menu -->
+<div class="ctx-menu hidden" id="ctx-menu"><ul id="ctx-list"></ul></div>
+
+<!-- Emoji picker -->
+<div class="emoji-picker hidden" id="emoji-picker"><div id="emoji-grid"></div></div>
+
+<!-- Recording bar -->
+<div class="rec-bar hidden" id="rec-bar">
+  <div class="rec-pulse"></div>
+  <span id="rec-time">0:00</span>
+  <span class="rec-label">Recording…</span>
+  <button class="ic danger-ic" id="cancel-rec"><i class="fa-solid fa-trash"></i></button>
+  <button class="ic send-btn" id="send-rec"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
+
+<!-- Toasts -->
+<div id="toasts"></div>
+
+<!-- Connection status -->
+<div class="conn-status hidden" id="conn-status">
+  <i class="fa-solid fa-wifi-slash"></i> Reconnecting…
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/socket.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/chat.js"></script>
+<script src="/js/messages.js"></script>
+<script src="/js/media.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
