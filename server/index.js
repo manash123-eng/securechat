@@ -30,7 +30,7 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e8
 });
 
-// ✅ Security middleware
+// ✅ Security
 app.use(helmet({
   contentSecurityPolicy: false
 }));
@@ -40,7 +40,7 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Rate limiting
+// ✅ Rate limit
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX) || 100
@@ -48,7 +48,7 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
-// ✅ Body parsing
+// ✅ Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -57,45 +57,47 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// ✅ Static files
-app.use(express.static(path.join(__dirname, '../client')));
+// ✅ STATIC FRONTEND (IMPORTANT)
+const clientPath = path.join(__dirname, '../client');
+app.use(express.static(clientPath));
+
+// ✅ Upload folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ✅ Routes
+// ✅ API ROUTES
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// ✅ Health check
+// ✅ HEALTH CHECK
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// ✅ Root route (FIXES 502)
-app.get('/', (req, res) => {
-  res.send('🚀 SecureChat API is running');
-});
-
-// ✅ Serve frontend fallback
+// ❗ FRONTEND FIX (VERY IMPORTANT)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API route not found' });
+  }
+
+  res.sendFile(path.join(clientPath, 'index.html'));
 });
 
-// ✅ Error handler
+// ✅ ERROR HANDLER
 app.use(errorHandler);
 
-// ✅ Socket handler
+// ✅ SOCKET
 socketHandler(io);
 
-// ❗ Ensure MONGO_URI exists
+// ❗ ENV CHECK
 if (!process.env.MONGO_URI) {
   console.error('❌ MONGO_URI is missing');
   process.exit(1);
 }
 
-// ✅ MongoDB connection (FIXED)
+// ✅ DB CONNECT
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
