@@ -20,6 +20,7 @@ const { errorHandler } = require('./middleware/errorHandler');
 const app = express();
 const server = http.createServer(app);
 
+// ✅ Socket.IO
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL || '*',
@@ -29,19 +30,9 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e8
 });
 
-// Security middleware
+// ✅ Security middleware
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "blob:", "*"],
-      mediaSrc: ["'self'", "blob:", "*"],
-      connectSrc: ["'self'", "ws:", "wss:"]
-    }
-  }
+  contentSecurityPolicy: false
 }));
 
 app.use(cors({
@@ -49,69 +40,69 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// ✅ Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-  max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
-  message: { error: 'Too many requests, please try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false
-});
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { error: 'Too many auth attempts, please try again later.' }
+  max: parseInt(process.env.RATE_LIMIT_MAX) || 100
 });
 
 app.use('/api/', limiter);
-app.use('/api/auth/', authLimiter);
 
-// Body parsing
+// ✅ Body parsing
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-// Logging
+// ✅ Logging
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Static files
+// ✅ Static files
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// API Routes
+// ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// Health check
+// ✅ Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok' });
 });
 
-// Serve frontend for all other routes
+// ✅ Root route (FIXES 502)
+app.get('/', (req, res) => {
+  res.send('🚀 SecureChat API is running');
+});
+
+// ✅ Serve frontend fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-// Error handling
+// ✅ Error handler
 app.use(errorHandler);
 
-// Socket.IO handler
+// ✅ Socket handler
 socketHandler(io);
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/securechat')
+// ❗ Ensure MONGO_URI exists
+if (!process.env.MONGO_URI) {
+  console.error('❌ MONGO_URI is missing');
+  process.exit(1);
+}
+
+// ✅ MongoDB connection (FIXED)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
+
     const PORT = process.env.PORT || 3000;
     server.listen(PORT, () => {
-      console.log(`🚀 SecureChat server running on http://localhost:${PORT}`);
-      console.log(`📡 Socket.IO ready`);
-      console.log(`🔒 End-to-end encryption: AES-256`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch(err => {
