@@ -1,10 +1,14 @@
-# 🔐 SecureChat v2 — Fixed & Upgraded
+# 🔐 SecureChat v2 — 
 
-End-to-end encrypted WhatsApp-style messenger. All messaging bugs fixed.
+A real-time secure messaging application built using full-stack development.
+This project focuses on fast communication, encryption, and user-friendly design.
 
----
+🟢 Introduction
 
-## 🐛 Bugs Fixed in v2
+SecureChat is a chat application where users can communicate in real time securely.
+The goal of this project is to create a system similar to WhatsApp that supports messaging, media sharing, and live updates while maintaining data privacy and security.
+
+ 🐛 Bugs Fixed in v2
 
 | # | Bug | File | Fix |
 |---|-----|------|-----|
@@ -18,7 +22,16 @@ End-to-end encrypted WhatsApp-style messenger. All messaging bugs fixed.
 | 8 | Messages duplicated in group chats | `messages.js` | Fixed sender ID comparison (`_id` vs string) |
 
 ---
+🔗 Important Links
 
+👉 Live Project (Deployment):
+https://securechat-production-da90.up.railway.app/
+
+👉 Project Presentation (PPT/Video):
+https://youtu.be/CFO5N1KiUTM?si=tQgFb6KzUqkMmwAg 
+
+👉 GitHub Repository:
+https://github.com/manash123-eng/securechat
 ## ⚡ Quick Start
 
 ```bash
@@ -112,29 +125,15 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 
 ---
 
-## 🚀 Deploy Options
+🌐 Deployment
 
-### Railway (easiest)
-```bash
-git init && git add . && git commit -m "init"
-git push to GitHub → connect on railway.app → add env vars → deploy
-```
+I deployed this project using Railway.
 
-### Docker
-```bash
-cp .env.example .env   # fill in values
-docker compose up -d
-```
+Steps:
 
-### PM2 on VPS
-```bash
-npm install -g pm2
-npm install
-pm2 start ecosystem.config.js --env production
-pm2 save && pm2 startup
-```
-
----
+Uploaded code to GitHub
+Connected repository with Railway
+Added environment variables
 
 ## ✅ Feature List
 
@@ -176,3 +175,43 @@ pm2 save && pm2 startup
 - Input validation on all endpoints
 - XSS escaping on all rendered content
 - File type validation on uploads
+👇
+
+💻 Frontend (Client Side)
+
+The frontend is the part of the application that the user directly interacts with.
+
+In my project, I built the frontend using:
+
+HTML
+CSS
+JavaScript
+
+It is responsible for:
+
+Displaying the chat interface (sidebar, messages, user list)
+Taking user input (typing messages, login/signup)
+Showing real-time updates like typing indicator and read receipts
+Handling UI features like dark/light mode
+
+I also used Socket.IO (client side) so messages appear instantly without refreshing the page.
+
+⚙️ Backend (Server Side)
+
+The backend handles all the logic, data, and security of the application.
+
+In my project, I used:
+
+Node.js
+Express.js
+MongoDB
+
+It is responsible for:
+
+User authentication (login/signup using JWT)
+Storing and retrieving messages from database
+Encrypting and decrypting messages
+Managing chats (private and group)
+Handling real-time communication using Socket.IO
+
+     
