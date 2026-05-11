@@ -8,20 +8,8 @@ This project focuses on fast communication, encryption, and user-friendly design
 SecureChat is a chat application where users can communicate in real time securely.
 The goal of this project is to create a system similar to WhatsApp that supports messaging, media sharing, and live updates while maintaining data privacy and security.
 
- 🐛 Bugs Fixed in v2
+ 
 
-| # | Bug | File | Fix |
-|---|-----|------|-----|
-| 1 | Messages not sending | `socketHandler.js` | AES key now correctly padded to 32 bytes |
-| 2 | Race condition on login | `app.js` | Removed duplicate submit listeners, clean callback chain |
-| 3 | `hasPendingMedia is not a function` crash | `messages.js` | Fixed function name mismatch (`hasPending`) |
-| 4 | Socket drops lost all messages | `socket.js` | Added reconnection + room re-join |
-| 5 | Private chat query finding wrong chats | `chatController.js` | Fixed `$all` query |
-| 6 | Encryption key mismatch REST vs Socket | `messageController.js` | Both now use same `getRawKey()` helper |
-| 7 | Group participant IDs not parsed | `chatController.js` | Handles both `participantIds` and `participantIds[]` |
-| 8 | Messages duplicated in group chats | `messages.js` | Fixed sender ID comparison (`_id` vs string) |
-
----
 🔗 Important Links
 
 👉 Live Project (Deployment):
