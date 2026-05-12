@@ -126,19 +126,19 @@ The project focuses heavily on:
 ## 🔑 Authentication Page
 
 ### Sign In
-<img width="100%" src="<img width="1342" height="893" alt="Screenshot 2026-05-12 072744" src="https://github.com/user-attachments/assets/903afb21-b34a-4dcb-8385-1aedd83ddcf9" />
-" />
+<img width="1342" height="893" alt="Screenshot 2026-05-12 072744" src="https://github.com/user-attachments/assets/903afb21-b34a-4dcb-8385-1aedd83ddcf9" />
+
 
 ### Sign Up
-<img width="100%" src="<img width="1021" height="861" alt="Screenshot 2026-05-12 072759" src="https://github.com/user-attachments/assets/f2a7c958-cde9-4160-9b7e-d15c5f55359d" />
-" />
+<img width="1021" height="861" alt="Screenshot 2026-05-12 072759" src="https://github.com/user-attachments/assets/f2a7c958-cde9-4160-9b7e-d15c5f55359d" />
+
 
 ---
 
 ## 💬 Chat Dashboard
 
-<img width="100%" src="<img width="1901" height="910" alt="Screenshot 2026-05-12 072846" src="https://github.com/user-attachments/assets/466f48e4-3f63-469e-b46d-18e6d8243dcf" />
-" />
+<img width="1901" height="910" alt="Screenshot 2026-05-12 072846" src="https://github.com/user-attachments/assets/466f48e4-3f63-469e-b46d-18e6d8243dcf" />
+
 
 ---
 
