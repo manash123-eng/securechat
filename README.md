@@ -1,205 +1,405 @@
-# 🔐 SecureChat v2 — 
+<div align="center">
 
-A real-time secure messaging application built using full-stack development.
-This project focuses on fast communication, encryption, and user-friendly design.
+# 🔐 SecureChat
 
-🟢 Introduction
+### End-to-End Encrypted Real-Time Messaging Platform
 
-SecureChat is a chat application where users can communicate in real time securely.
-The goal of this project is to create a system similar to WhatsApp that supports messaging, media sharing, and live updates while maintaining data privacy and security.
+A modern real-time secure chat application that enables users to communicate privately through encrypted messaging, group conversations, and secure media sharing.
 
- 
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge&logo=node.js" />
+  <img src="https://img.shields.io/badge/Express.js-API-black?style=for-the-badge&logo=express" />
+  <img src="https://img.shields.io/badge/MongoDB-Database-green?style=for-the-badge&logo=mongodb" />
+  <img src="https://img.shields.io/badge/Socket.IO-RealTime-black?style=for-the-badge&logo=socket.io" />
+  <img src="https://img.shields.io/badge/JWT-Authentication-blue?style=for-the-badge&logo=jsonwebtokens" />
+  <img src="https://img.shields.io/badge/Docker-Containerized-blue?style=for-the-badge&logo=docker" />
+</p>
 
-🔗 Important Links
+### 🚀 Live Demo
+🔗 https://securechat-production-da90.up.railway.app/
 
-👉 Live Project (Deployment):
-https://securechat-production-da90.up.railway.app/
+</div>
 
-👉 Project Presentation (PPT/Video):
-https://youtu.be/CFO5N1KiUTM?si=tQgFb6KzUqkMmwAg 
+---
 
-👉 GitHub Repository:
-https://github.com/manash123-eng/securechat
-## ⚡ Quick Start
+# 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Application Screenshots](#-application-screenshots)
+- [Architecture](#-architecture)
+- [Folder Structure](#-folder-structure)
+- [Environment Variables](#-environment-variables)
+- [Installation & Setup](#-installation--setup)
+- [Docker Setup](#-docker-setup)
+- [API Routes](#-api-routes)
+- [Real-Time Features](#-real-time-features)
+- [Security Features](#-security-features)
+- [Deployment](#-deployment)
+- [Future Improvements](#-future-improvements)
+- [Author](#-author)
+
+---
+
+# 📌 Overview
+
+SecureChat is a secure real-time messaging platform designed for private and encrypted communication. The application supports one-to-one messaging, group conversations, media sharing, typing indicators, and online presence tracking using WebSockets.
+
+The project focuses heavily on:
+- Real-time communication
+- Secure authentication
+- Encrypted messaging
+- Responsive UI
+- Scalable backend architecture
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication & Security
+- JWT-based authentication
+- Secure login & signup system
+- Password encryption
+- End-to-end encrypted messaging
+- Protected API routes
+- Rate limiting support
+
+## 💬 Messaging Features
+- Real-time messaging using Socket.IO
+- One-to-one private chat
+- Group chat functionality
+- Typing indicators
+- Online/offline user status
+- Instant message updates
+
+## 📁 Media Features
+- Secure file sharing
+- Media upload support
+- Upload management system
+
+## 🎨 User Experience
+- Modern dark UI
+- Responsive design
+- Theme toggle support
+- Fast and interactive interface
+
+## ⚙️ Additional Features
+- Docker support
+- Shell setup scripts
+- Railway deployment
+- Structured MVC backend architecture
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+- HTML5
+- Tailwind CSS
+- Vanilla JavaScript
+
+## Backend
+- Node.js
+- Express.js
+
+## Database
+- MongoDB
+
+## Authentication
+- JWT (JSON Web Tokens)
+
+## Real-Time Communication
+- Socket.IO
+
+## Deployment
+- Railway
+
+## DevOps & Tools
+- Docker
+- Shell Scripts
+
+---
+
+# 🖼 Application Screenshots
+
+## 🔑 Authentication Page
+
+### Sign In
+<img width="100%" src="ADD_SIGNIN_SCREENSHOT_LINK_HERE" />
+
+### Sign Up
+<img width="100%" src="ADD_SIGNUP_SCREENSHOT_LINK_HERE" />
+
+---
+
+## 💬 Chat Dashboard
+
+<img width="100%" src="ADD_CHAT_DASHBOARD_SCREENSHOT_LINK_HERE" />
+
+---
+
+## 🎛 Dashboard Controls
+
+The top-left control panel includes:
+
+| Button | Function |
+|---|---|
+| ✏️ | New Chat |
+| 👥 | Create Group |
+| ⚙️ | Toggle Theme |
+| 🚪 | Logout |
+
+---
+
+# 🏗 Architecture
+
+The project follows a modular MVC-based backend architecture.
 
 ```bash
-# 1. Extract
-tar -xzf securechat.tar.gz && cd securechat
-
-# 2. Install
-npm install
-
-# 3. Configure — edit .env with your values
-cp .env.example .env
-
-# 4. Start MongoDB (separate terminal)
-mongod
-
-# 5. Run
-npm run dev   # development
-npm start     # production
+Client → REST API → Express Server → MongoDB
+               ↘
+             Socket.IO
 ```
 
-Open **http://localhost:3000**
+### Backend Layers
+
+- Controllers → Business logic
+- Routes → API endpoints
+- Models → MongoDB schemas
+- Middleware → Authentication & validation
+- Utils → Socket handling & helpers
 
 ---
 
-## 📁 Project Structure
+# 📂 Folder Structure
 
-```
+```bash
 securechat/
-├── server/
-│   ├── index.js                   Express + Socket.IO server
-│   ├── controllers/
-│   │   ├── authController.js      Register, login, profile
-│   │   ├── chatController.js ✅   Private/group chat (fixed query)
-│   │   ├── messageController.js ✅ AES-256 encrypt/decrypt (fixed key)
-│   │   └── userController.js      Search, contacts
-│   ├── models/
-│   │   ├── User.js                bcrypt passwords, online status
-│   │   ├── Chat.js                Private + group schema
-│   │   └── Message.js             Encrypted messages, reactions
-│   ├── routes/                    auth / users / chats / messages / upload
-│   ├── middleware/
-│   │   ├── auth.js                JWT + Socket.IO authentication
-│   │   ├── errorHandler.js        Global error handler
-│   │   └── validation.js          Input validation rules
-│   └── utils/
-│       └── socketHandler.js ✅   Real-time events (fixed encryption)
+│
 ├── client/
-│   ├── index.html                 Single-page app shell (redesigned)
 │   ├── css/
-│   │   └── main.css               Premium UI — dark/light, glassmorphism
-│   └── js/
-│       ├── api.js                 REST client
-│       ├── socket.js ✅           Socket.IO wrapper (fixed reconnection)
-│       ├── ui.js                  Toasts, modals, avatars, formatters
-│       ├── auth.js ✅             Login/register (fixed race condition)
-│       ├── chat.js ✅             Sidebar, search, new chat/group
-│       ├── messages.js ✅        Render + send (all crashes fixed)
-│       ├── media.js               File upload, voice, lightbox
-│       └── app.js ✅             Boot sequence (fixed)
-├── .env                           Your config (never commit)
-├── .env.example                   Template
-├── Dockerfile                     Container build
-├── docker-compose.yml             App + MongoDB
-└── setup.sh                       One-command local setup
+│   │   └── main.css
+│   │
+│   ├── js/
+│   │   ├── api.js
+│   │   ├── app.js
+│   │   ├── auth.js
+│   │   ├── chat.js
+│   │   ├── media.js
+│   │   ├── messages.js
+│   │   ├── socket.js
+│   │   └── ui.js
+│   │
+│   └── index.html
+│
+├── server/
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── chatController.js
+│   │   ├── messageController.js
+│   │   └── userController.js
+│   │
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   ├── errorHandler.js
+│   │   └── validation.js
+│   │
+│   ├── models/
+│   │   ├── Chat.js
+│   │   ├── Message.js
+│   │   └── User.js
+│   │
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── chats.js
+│   │   ├── messages.js
+│   │   ├── uploads.js
+│   │   └── users.js
+│   │
+│   ├── uploads/
+│   │   └── .gitkeep
+│   │
+│   ├── utils/
+│   │   └── socketHandler.js
+│   │
+│   └── index.js
+│
+├── Dockerfile
+├── docker-compose.yml
+├── ecosystem.config.js
+├── setup.sh
+├── package.json
+└── README.md
 ```
 
 ---
 
-## 🔒 Environment Variables
+# 🔑 Environment Variables
+
+Create a `.env` file in the root directory:
 
 ```env
-PORT=3000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/securechat
-JWT_SECRET=<64-char random hex string>
-JWT_EXPIRES_IN=7d
-ENCRYPTION_KEY=<exactly 32 characters>
-MAX_FILE_SIZE=50000000
-RATE_LIMIT_MAX=100
-RATE_LIMIT_WINDOW_MS=900000
-```
-
-**Generate keys:**
-```bash
-# JWT Secret
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-# Encryption Key (exactly 32 chars)
-node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+NODE_ENV=
+MONGO_URI=
+JWT_SECRET=
+PORT=
+JWT_EXPIRES_IN=
+ENCRYPTION_KEY=
+CLIENT_URL=
+RATE_LIMIT_WINDOW_MS=
+RATE_LIMIT_MAX=
 ```
 
 ---
 
-🌐 Deployment
+# ⚙️ Installation & Setup
 
-I deployed this project using Railway.
+## 1️⃣ Clone Repository
 
-Steps:
+```bash
+git clone https://github.com/manash123-eng/securechat.git
+```
 
-Uploaded code to GitHub
-Connected repository with Railway
-Added environment variables
+## 2️⃣ Navigate to Project
 
-## ✅ Feature List
+```bash
+cd securechat
+```
 
-**Messaging**
-- One-to-one private chats
-- Group chats with admin roles
-- Text, image, video, audio, file messages
-- Voice message recording
-- Reply to any message
-- Edit messages (with "edited" tag)
-- Delete for me / delete for everyone
-- Emoji reactions (click to toggle)
+## 3️⃣ Install Dependencies
 
-**Real-time**
-- Instant Socket.IO delivery
-- Online/offline presence
+```bash
+npm install
+```
+
+## 4️⃣ Configure Environment Variables
+
+Create `.env` file and add required values.
+
+## 5️⃣ Start Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+# 🐳 Docker Setup
+
+## Build Docker Container
+
+```bash
+docker build -t securechat .
+```
+
+## Run Container
+
+```bash
+docker run -p 5000:5000 securechat
+```
+
+## Docker Compose
+
+```bash
+docker-compose up
+```
+
+---
+
+# 🔌 API Routes
+
+## Authentication Routes
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Register user |
+| POST | `/api/auth/login` | Login user |
+
+---
+
+## Chat Routes
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/api/chats` | Fetch chats |
+| POST | `/api/chats` | Create chat |
+
+---
+
+## Message Routes
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/api/messages/:chatId` | Fetch messages |
+| POST | `/api/messages` | Send message |
+
+---
+
+## Upload Routes
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/api/uploads` | Upload media |
+
+---
+
+# ⚡ Real-Time Features
+
+SecureChat uses Socket.IO for bidirectional communication.
+
+### Real-Time Events
+- Instant messaging
 - Typing indicators
-- Read receipts (✓ sent, ✓✓ delivered, blue ✓✓ read)
-- Auto-reconnect on connection drop
+- Online/offline updates
+- Live chat synchronization
+- Group communication updates
 
-**UI**
-- WhatsApp-style sidebar + chat window
-- Glassmorphism dark theme
-- Light/dark mode toggle (saved to profile)
-- Mobile responsive with slide animation
+---
+
+# 🔒 Security Features
+
+- JWT Authentication
+- Encrypted communication
+- Protected routes
+- Rate limiting
+- Secure media handling
+- Environment-based configuration
+
+---
+
+# 🚀 Deployment
+
+The application is deployed on Railway.
+
+### Live URL
+🔗 https://securechat-production-da90.up.railway.app/
+
+---
+
+# 📈 Future Improvements
+
+- Voice & video calling
+- Message reactions
+- Push notifications
 - Message search
-- Chat + user search
-- Media lightbox (click image to expand)
-- Context menus (right-click messages/chats)
-- Toast notifications
-- Connection status indicator
+- Read receipts
+- AI moderation
+- Mobile application
+- Redis caching
+- WebRTC integration
 
-**Security**
-- AES-256-CBC end-to-end encryption
-- bcrypt password hashing (cost 12)
-- JWT authentication
-- Helmet.js security headers
-- Rate limiting (100 req/15min, 20 auth/15min)
-- Input validation on all endpoints
-- XSS escaping on all rendered content
-- File type validation on uploads
-👇
+---
 
-💻 Frontend (Client Side)
+# 👨‍💻 Author
 
-The frontend is the part of the application that the user directly interacts with.
+### Manash
 
-In my project, I built the frontend using:
+GitHub:
+🔗 https://github.com/manash123-eng
 
-HTML
-CSS
-JavaScript
+---
 
-It is responsible for:
+# ⭐ Support
 
-Displaying the chat interface (sidebar, messages, user list)
-Taking user input (typing messages, login/signup)
-Showing real-time updates like typing indicator and read receipts
-Handling UI features like dark/light mode
-
-I also used Socket.IO (client side) so messages appear instantly without refreshing the page.
-
-⚙️ Backend (Server Side)
-
-The backend handles all the logic, data, and security of the application.
-
-In my project, I used:
-
-Node.js
-Express.js
-MongoDB
-
-It is responsible for:
-
-User authentication (login/signup using JWT)
-Storing and retrieving messages from database
-Encrypting and decrypting messages
-Managing chats (private and group)
-Handling real-time communication using Socket.IO
-
-     
+If you found this project useful, consider giving it a ⭐ on GitHub.
